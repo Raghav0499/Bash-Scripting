@@ -1,35 +1,56 @@
 #!/bin/bash
 
-#mkdir backup
+datestamp=$(date +%d-%m-%y)
+mkdir /home/raghav/backup
+mkdir /home/raghav/backup/daily
+mkdir /home/raghav/backup/weekly
+mkdir /home/raghav/backup/monthly
 
-#mkdir /home/raghav/backup/daily/
+logfile=backup-$datestamp.log
 
-#mkdir /home/raghav/backup/weekly
+touch /home/raghav/backup/$logfile
 
-#mkdir /home/raghav/backup/monthly
+exec >>/home/raghav/backup/$logfile
 
-tar -czvf backupcomp.tar.gz backup
+#mkdir /home/raghav/backup/daily/$(date +%d-%m-%y)
+#mkdir /home/raghav/backup/weekly/$(date +%d-%m-%y)
+#mkdir /home/raghav/backup/monthly/$(date +%d-%m-%y)
+
 
 source="/home/raghav/files/*"
-destination="/home/raghav/backup/"
-daily="/home/raghav/backup/daily/"
-weekly="/home/raghav/backup/weekly/"
-monthly="/home/raghav/backup/monthly/"
+destination="/home/raghav/backup"
+#daily="/home/raghav/backup/daily/$(date +%d-%m-%y)"
+#weekly="/home/raghav/backup/weekly/$(date +%d-%m-%y)"
+#monthly="/home/raghav/backup/monthly/$(date +%d-%m-%y)"
 
 
 #cp -R $source $destination
+#echo "Enter a folder"
+#read folder
+#param = "daily"
 
 
-echo "Enter a folder"
-read folder
-
-case $folder in "daily") cp -R $source $daily;;
-"weekly") cp -R $source $weekly;;
-"monthly") cp -R $source $monthly;;
-*) echo "wrong input given";;
+case $1 in "daily") 
+mkdir /home/raghav/backup/daily/$(date +%d-%m-%y)
+daily="/home/raghav/backup/daily/$(date +%d-%m-%y)"
+cp -R $source $daily
+echo Daily Backup Run is selected;;
+"weekly") 
+mkdir /home/raghav/backup/weekly/$(date +%d-%m-%y)
+weekly="/home/raghav/backup/weekly/$(date +%d-%m-%y)"
+cp -R $source $weekly
+echo Weekly Backup Run is Selected;;
+"monthly") 
+mkdir /home/raghav/backup/monthly/$(date +%d-%m-%y)
+monthly="/home/raghav/backup/monthly/$(date +%d-%m-%y)"
+cp -R $source $monthly
+echo Monthly Backup Run Selected;;
+*) 
+echo "wrong input given";;
 esac
 
+zip -r backupzip.zip backup
 
-
+echo Backup Folder Compressed Successfully
 
 
